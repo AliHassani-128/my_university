@@ -1,0 +1,36 @@
+{% extends 'my_university/home.html' %}
+{% block content %}
+{% if classes %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" class="text-center"> نام کلاس ها</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for class in classes %}
+            <tr>
+                <td class="text-center"><a href="{% url 'my_university:lesson_student' class.id %}">{{ class.name }}</a></td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+
+<div class="row justify-content-center mt-5">
+    {% if perms.my_university.add_student %}
+    <button type="button" class="btn btn-info mr-3">
+        <a class="text-center text-white" href="{% url 'my_university:new_student' %}">Add new student</a>
+    </button>
+    {% if not user.is_superuser %}
+    <button type="button" class="btn btn-info ml-3">
+        <a class="text-center text-white" href="{% url 'my_university:select_lesson' user.id %}">select lessons</a>
+    </button>
+    {% endif %}
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>All Classes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+{% if classes %}
+    {% for class in classes %}
+        {% if forloop.counter == 1 %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col" class="text-center">نام کلاس</th>
+
+                    <th scope="col">نام درس</th>
+                    <th scope="col">نام استاد</th>
+                    <th scope="col">عکس</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-center">{{ class.classroom.name }}</td>
+                    <td>{{ class.lesson.name }}</td>
+                    <td>{{ class.lesson.teacher.name }}</td>
+                    {% if class.lesson.teacher.image %}
+                        <td><img src="{{ class.lesson.teacher.image.url }}" alt="{{ class.lesson.teacher.name }}"
+                                 style="max-height: 100px;max-width: 100px"></td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
+
+
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">کد دانشجو</th>
+            <th scope="col">نام دانشجو</th>
+            <th scope="col">رشته تحصیلی</th>
+            <th scope="col">نام دانشکده</th>
+            <th scope="col"> عکس دانشجو</th>
+        </tr>
+
+        </thead>
+
+
+        {% for class in classes %}
+
+
+            <tbody>
+            {% if class.student %}
+                <tr>
+                    <td>{{ class.student.id }}</td>
+                    <td>
+                        <a href="{% url 'my_university:edit_profile' class.student.id %}">{{ class.student.name }} {{ class.student.last_name }}</a>
+                    </td>
+                    <td>{{ class.student.major }}</td>
+                    <td>{{ class.student.faculty.name }}</td>
+                    {% if class.student.image %}
+                        <td><img src="{{ class.student.image.url }}" alt="{{ class.student.name }}"
+                                 style="max-height: 100px;max-width: 100px"></td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+            </tbody>
+
+
+
+        {% endfor %}
+
+    </table>
+{% endif %}
+
+
+</body>
+</html>

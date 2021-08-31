@@ -1,0 +1,10 @@
+{% extends 'my_university/home.html' %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <form class="form-group" enctype="multipart/form-data" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-info" type="submit" value="Save">
+    </form>
+</div>
+{% endblock %}

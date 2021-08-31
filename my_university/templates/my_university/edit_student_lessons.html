@@ -1,0 +1,22 @@
+{% extends 'my_university/home.html' %}
+{% block content %}
+
+{% if classes %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" class="text-center"> نام درس ها</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for class in classes %}
+            <tr>
+                <td class="text-center">{{ class.lesson.name }} <button class="btn btn-danger"><a href="{% url 'my_university:edit-lesson' class.lesson.id class.student.id %}" class="text-white">Delete</a> </button></td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
