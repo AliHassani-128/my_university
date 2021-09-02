@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'my_university'
+    'my_university',
+    'library',
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,8 @@ except Exception as e:
     pass
 # LOGIN_URL = '/accounts/login/'
 
+AUTH_USER_MODEL = 'my_university.CustomUser'
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
+LOGIN_REDIRECT_URL = '/'

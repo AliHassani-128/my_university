@@ -6,6 +6,10 @@ from .models import *
 class StudentInline(admin.StackedInline):
     model = Student
 
+@admin.register(CustomUser)
+class UserAdmin(admin.ModelAdmin):
+    pass
+
 
 
 class ClassInline(admin.StackedInline):
@@ -15,6 +19,9 @@ class ClassInline(admin.StackedInline):
 class TeacherAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Major)
+class MajorAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):

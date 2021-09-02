@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
@@ -13,6 +14,67 @@ from .models import *
 # Create your views here.
 def home(request):
     return render(request, 'my_university/home.html')
+
+def login_student(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(Student.objects.filter(name=username))
+        print(Student.objects.filter(name=username,password=password))
+        if Student.objects.filter(name=username, password=password):
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                messages.error(request, 'username or password not found')
+                return render(request, 'my_university/login_student.html')
+        else:
+            messages.error(request, 'Just Students can login with this view')
+            return render(request, 'my_university/login_student.html')
+
+    return render(request, 'my_university/login_student.html')
+
+
+def login_teacher(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if Teacher.objects.filter(name=username, password=password):
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                messages.error(request, 'username or password not found')
+                return render(request, 'my_university/login_teacher.html')
+        else:
+            messages.error(request, 'Just Teachers can login with this view')
+            return render(request, 'my_university/login_teacher.html')
+
+    return render(request, 'my_university/login_teacher.html')
+
+def login_staff(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if Staff.objects.filter(name=username,password=password):
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                messages.error(request, 'username or password not found')
+                return render(request, 'my_university/login_staff.html')
+        else:
+            messages.error(request, 'Just Staffs can login with this view')
+            return render(request,'my_university/login_staff.html')
+
+
+
+    return render(request, 'my_university/login_staff.html')
+
 
 
 
@@ -43,9 +105,14 @@ def all_class(request):
 
 
 def lesson_student(request, class_id):
-    find_class = Class_Lesson_Student.objects.filter(classroom_id=class_id).order_by('lesson_id')
+    find_class = Class_Lesson_Student.objects.filter(classroom_id=class_id).values('lesson_id','lesson__name').distinct()
     context = {'classes': find_class}
     return render(request, 'my_university/lesson_student.html', context=context)
+
+def show_lesson_student(request,lesson_id):
+    find_lesson = Class_Lesson_Student.objects.filter(lesson_id=lesson_id)
+    context = {'classes':find_lesson}
+    return render(request,'my_university/show_lesson_student.html',context=context)
 
 
 
@@ -64,11 +131,12 @@ def new_student(request):
             if Student.objects.filter(name=name, last_name=last_name, major=major).exists():
                 messages.error(request, 'Student with this name has exists')
                 return render(request, 'my_university/new_student.html', context={'form': form})
+
             else:
                 new_st.password = password
                 new_st.save()
                 messages.success(request, 'Student added successfully')
-                return HttpResponseRedirect('login/')
+                return HttpResponseRedirect('/')
 
     else:
         form = StudentForm()
@@ -116,16 +184,22 @@ def search(request):
     if request.method == 'POST':
         input = request.POST.get('search')
         result = Class_Lesson_Student.objects.filter(
-            Q(classroom__name__contains=input) | Q(lesson__name__contains=input))
+            Q(classroom__name__contains=input) | Q(lesson__name__contains=input)).values('lesson_id','lesson__name').distinct()
         if result:
             return render(request, 'my_university/lesson_student.html', context={'classes': result})
         else:
             messages.error(request, 'Not found')
             return render(request, 'my_university/home.html')
 
-def all_students(request):
-    students = Student.objects.all()
-    return render(request,'my_university/all_students.html',context={'students':students})
+def all_students(request,teacher_id):
+
+    try:
+        staff = get_object_or_404(Staff,id=teacher_id)
+    except:
+        classroom = Class_Lesson_Student.objects.filter(lesson__teacher_id=teacher_id).values('student__last_name','student__name','student_id').distinct()
+    else:
+        classroom = Class_Lesson_Student.objects.filter(Q(lesson__teacher_id=teacher_id )|Q(student__faculty_id=staff.faculty.id)).values('student__last_name','student__name','student_id').distinct()
+    return render(request,'my_university/all_students.html',context={'classes':classroom})
 
 def student_all_lessons(request,student_id):
     classroom = Class_Lesson_Student.objects.filter(student_id=student_id)

@@ -1,0 +1,33 @@
+{% extends 'library/base.html' %}
+{% block title %}
+    <title>Show rental books</title>
+
+{% endblock %}
+
+{% block content %}
+{% if rentals %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" class="text-center"> نام کتاب ها</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for rent in rentals %}
+            <tr>
+                <td class="text-center">{{ rent.book.name }}</td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+    <div class="row justify-content-center">
+    <button class="btn btn-success"><a href="{% url 'my_university:home' %}" class="text-white">Home</a></button>
+    </div>
+
+
+{% endblock %}

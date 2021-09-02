@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-{% if students %}
+{% if classes %}
     <table class="table">
         <thead>
         <tr>
@@ -13,9 +13,9 @@
         </tr>
         </thead>
         <tbody>
-        {% for student in students %}
+        {% for class in classes %}
             <tr>
-                <td class="text-center"><a href="{% url 'my_university:show_all_lessons' student.id %}">{{ student.name }} {{ student.last_name }}</a></td>
+                <td class="text-center"><a href="{% url 'my_university:show_all_lessons' class.student_id %}">{{ class.student__name }} {{ class.student__last_name }}</a></td>
 
             </tr>
 

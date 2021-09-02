@@ -68,6 +68,20 @@
                 </button>
             </div>
 
+            {% if perms.library.add_rental %}
+                <div class="col-auto ml-2">
+                    <button class="btn btn-primary">
+                        <a href="{% url 'library:rent_book' %}" class="text-white">select book</a>
+                    </button>
+                </div>
+
+                <div class="col-auto ml-2">
+                    <button class="btn btn-primary">
+                        <a href="{% url 'library:show_books' %}" class="text-white">Show rental books</a>
+                    </button>
+                </div>
+            {% endif %}
+
 
             <div class="col-auto">
                 <button class="btn btn-danger">
@@ -77,18 +91,36 @@
                 </button>
             </div>
             {% if perms.my_university.delete_class_lesson_student %}
-            <div class="col-auto">
-            <button type="button" class="btn btn-info mr-3">
-                <a class="text-center text-white" href="{% url 'my_university:all_students' %}">Show all students</a>
-            </button></div>{% endif %}
+                <div class="col-auto">
+                    <button type="button" class="btn btn-info mr-3">
+                        <a class="text-center text-white" href="{% url 'my_university:all_students' user.id %}">Show all
+                            students</a>
+                    </button>
+                </div>{% endif %}
 
         </div>
     {% else %}
         <div class="row justify-content-center">
             <div class="col-auto">
-                <button class="btn btn-info">
-                    <a href="{% url 'my_university:login' %}" class="text-center text-white">
-                        login
+                <button class="btn btn-success">
+                    <a href="{% url 'my_university:login_student' %}" class="text-center text-white">
+                        login student
+                    </a>
+                </button>
+            </div>
+
+            <div class="col-auto">
+                <button class="btn btn-success">
+                    <a href="{% url 'my_university:login_teacher' %}" class="text-center text-white">
+                        login teacher
+                    </a>
+                </button>
+            </div>
+
+            <div class="col-auto">
+                <button class="btn btn-success">
+                    <a href="{% url 'my_university:login_staff' %}" class="text-center text-white">
+                        login staff
                     </a>
                 </button>
             </div>

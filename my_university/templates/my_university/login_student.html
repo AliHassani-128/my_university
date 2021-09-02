@@ -1,0 +1,32 @@
+{% extends 'my_university/home.html' %}
+{% block title %}
+    <title>Login</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-center mb-5 mt-4">
+        <form action="{% url 'my_university:login_student' %}" method="post" class="form form-group">
+            {% csrf_token %}
+            <input name="username" type="text" class="rounded border-info" placeholder="username">
+            <input name="password" type="password" class="rounded border-info" placeholder="password">
+            <input type="submit" class="btn btn-success" value="Login">
+
+        </form>
+
+
+
+    </div>
+
+
+
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <button class="btn btn-info">
+                <a href="{% url 'my_university:home' %}" class="text-center text-white">
+                    Home
+                </a>
+            </button>
+        </div>
+    </div>
+{% endblock %}
